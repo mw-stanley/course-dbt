@@ -1,0 +1,38 @@
+version: 2
+
+sources:
+
+  - name: postgres 
+
+    database: raw 
+    schema: public 
+
+    tables:
+
+      - name: addresses
+        description: >
+          Physical addresses where customers can live and order things to
+
+      - name: events 
+        description: >
+          Users' browsing behaviour on the website, one row per event
+
+      - name: orders 
+        description: >
+          Orders - times users paid us money for products, one row per order
+
+      - name: order_items 
+        description: >
+          Products customers purchased as part of an order, one row per product per order
+          
+      - name: products 
+        description: >
+          Things that Greenery sells, one row per product
+
+      - name: promos 
+        description: >
+          Codes, entered at checkout, that give users discounts on their orders
+      
+      - name: users 
+        description: >
+          People who use Greenery

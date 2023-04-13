@@ -1,0 +1,31 @@
+version: 2
+
+models:
+
+  - name: stg_postgres__addresses
+    description: >
+      Physical addresses where customers can live and order things to
+
+  - name: stg_postgres__events
+    description: >
+      Users' browsing behaviour on the website, one row per event
+
+  - name: stg_postgres__order_items
+    description: >
+      Products customers purchased as part of an order, one row per product per order
+
+  - name: stg_postgres__orders
+    description: >
+      Orders - times users paid us money for products, one row per order
+
+  - name: stg_postgres__products
+    description: >
+      Things that Greenery sells, one row per product
+
+  - name: stg_postgres__promos
+    description: >
+      Codes, entered at checkout, that give users discounts on their orders
+
+  - name: stg_postgres__users
+    description: >
+      People who use Greenery including PII
