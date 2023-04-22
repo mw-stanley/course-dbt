@@ -1,0 +1,20 @@
+version: 2
+
+models:
+
+  - name: d_promos
+    description: >
+      Performance of Greenery Promotions
+    tests:
+      - dbt_utils.fewer_rows_than:
+          compare_model: ref('int_marketing__promo_daily_performance')
+      - dbt_utils.expression_is_true:
+          expression: "n_orders >= n_users"
+      - dbt_utils.expression_is_true:
+          expression: "total_discount_usd <= total_revenue_usd"
+    columns:
+      - name: promo_name
+        tests: 
+          - relationships:
+              to: ref('stg_postgres__promos')
+              field: promo_name

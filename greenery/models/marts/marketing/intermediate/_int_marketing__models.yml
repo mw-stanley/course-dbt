@@ -1,0 +1,33 @@
+version: 2
+
+models:
+
+  - name: int_marketing__promo_daily_performance
+    description: >
+      Daily performance KPIs for promos
+    columns:
+      - name: dt
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: promo_name
+        tests: 
+          - relationships:
+              to: ref('stg_postgres__promos')
+              field: promo_name
+      - name: n_orders
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: total_discount_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: total_revenue_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: n_users
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0

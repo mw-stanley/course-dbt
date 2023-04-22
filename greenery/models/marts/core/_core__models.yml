@@ -1,0 +1,31 @@
+version: 2
+
+models:
+
+  - name: d_products
+    description: >
+      All Greenery Products.
+      Assumptions: 
+      * Price of products doesn't change over time.
+      * Names of products don't change over time.
+
+      In a real-world project these assumptions would not be true so this dimension would be more complex.
+  
+  - name: d_users
+    description: >
+      All Greenery Users
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_postgres__users')
+
+  - name: f_orders
+    description: > 
+      All Greenery Orders
+    tests:
+      - dbt_utils.equal_rowcount:
+          compare_model: ref('stg_postgres__orders')
+
+
+  - name: f_order_items 
+    description: >
+      All items ordered from Greenery

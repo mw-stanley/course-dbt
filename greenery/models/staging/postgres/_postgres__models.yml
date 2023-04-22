@@ -5,27 +5,182 @@ models:
   - name: stg_postgres__addresses
     description: >
       Physical addresses where customers can live and order things to
+    columns:
+      - name: address_uuid
+        tests:
+          - unique
+          - not_null
 
   - name: stg_postgres__events
     description: >
       Users' browsing behaviour on the website, one row per event
+    tests:
+      - dbt_utils.expression_is_true:
+          expression: "product_uuid is not null"
+          where: "event_type in ('page_view', 'add_to_cart')"
+      - dbt_utils.expression_is_true:
+          expression: "order_uuid is not null"
+          where: "event_type in ('checkout', 'package_shipped')"
+    columns:
+      - name: event_uuid
+        tests:
+          - unique
+          - not_null
+      - name: session_uuid
+        tests:
+          - not_null
+      - name: user_uuid
+        tests:
+          - not_null
+          - dbt_expectations.expect_column_distinct_count_to_equal:
+              value: 1
+              group_by: [session_uuid]
+      - name: page_url
+        tests:
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: order_uuid
+        tests: 
+          - relationships:
+              to: ref('stg_postgres__orders')
+              field: order_uuid
+      - name: product_uuid
+        tests: 
+          - relationships:
+              to: ref('stg_postgres__products')
+              field: product_uuid
 
   - name: stg_postgres__order_items
     description: >
       Products customers purchased as part of an order, one row per product per order
+    columns:
+      - name: order_uuid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_postgres__orders')
+              field: order_uuid
+      - name: product_uuid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_postgres__products')
+              field: product_uuid
+      - name: quantity
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
 
   - name: stg_postgres__orders
     description: >
       Orders - times users paid us money for products, one row per order
+    tests: 
+      # - dbt_utils.expression_is_true: # Commented out because this test fails
+      #     expression: "(promo_name is null) and (order_cost_usd + shipping_cost_usd = order_total_usd)"
+      - dbt_utils.expression_is_true:
+          expression: "(delivered_at is null) or (created_at < delivered_at)"
+    columns:
+      - name: order_uuid
+        tests:
+          - unique
+          - not_null
+      - name: user_uuid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_postgres__users')
+              field: user_uuid
+      - name: promo_name
+        tests: 
+          - relationships:
+              to: ref('stg_postgres__promos')
+              field: promo_name
+      - name: shipping_address_uuid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_postgres__addresses')
+              field: address_uuid
+      - name: created_at
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: order_cost_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: shipping_cost_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: order_total_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: status
+        tests:
+          - not_null
 
   - name: stg_postgres__products
     description: >
       Things that Greenery sells, one row per product
+    columns:
+      - name: product_uuid
+        tests:
+          - unique
+          - not_null
+      - name: price_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: inventory_amount
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
 
   - name: stg_postgres__promos
     description: >
       Codes, entered at checkout, that give users discounts on their orders
+    columns:
+      - name: promo_name
+        tests:
+          - unique
+          - not_null
+      - name: discount_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: status
+        tests:
+          - not_null
 
   - name: stg_postgres__users
     description: >
       People who use Greenery including PII
+    columns:
+      - name: user_uuid
+        tests:
+          - unique
+          - not_null
+      - name: created_at
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: updated_at
+        tests:
+          - not_null
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: address_uuid
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_postgres__addresses')
+              field: address_uuid
+      

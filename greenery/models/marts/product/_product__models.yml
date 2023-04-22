@@ -1,0 +1,40 @@
+version: 2
+
+models:
+
+  - name: f_user_orders
+    description: > 
+      user-grain kpis about orders
+    tests:
+      - dbt_utils.fewer_rows_than:
+          compare_model: ref('d_users')
+      - dbt_utils.expression_is_true:
+          expression: "first_order_at <= last_order_at"
+      - dbt_utils.expression_is_true:
+          expression: "total_discount_usd is not null"
+          where: "promos_used > 0"
+    columns:
+      - name: n_orders
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 1
+      - name: first_order_at
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: last_order_at
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: promos_used
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: f_page_views
+    description: >
+      page view events (candidate to become intermediary model)
+
+  - name: f_product_daily_performance
+    description: >
+      Daily KPIs for Greenery products

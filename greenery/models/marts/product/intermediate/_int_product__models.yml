@@ -1,0 +1,51 @@
+version: 2
+
+models:
+
+  - name: int_product__daily_order_performance
+    description: > 
+      Day, product grain KPIs about orders
+    columns:
+      - name: product_uuid
+        tests:
+          - relationships:
+              to: ref('stg_postgres__products')
+              field: product_uuid
+      - name: dt
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: n_orders
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: n_items
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: revenue_usd
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+
+  - name: int_product__daily_site_performance 
+    description: >
+      Day, product grain KPIs on the website
+    columns:
+      - name: product_uuid
+        tests:
+          - relationships:
+              to: ref('stg_postgres__products')
+              field: product_uuid
+      - name: dt
+        tests:
+          - dbt_utils.accepted_range:
+              max_value: "getdate()"
+      - name: product_page_views
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
+      - name: product_add_to_carts
+        tests:
+          - dbt_utils.accepted_range:
+              min_value: 0
