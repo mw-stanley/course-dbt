@@ -28,14 +28,14 @@ There are three mart folders:
 
 * **Core:** This mart contains fairly thin interfaces to the staging tables that are reused frequently. Some views include joins to add more context to the row, but no KPIs, aggregations, or joins that increase the number of rows over the staging table are performed in Core at present.
 * **Marketing:** This mart contains 
-  - A dimension model of promotions that includes some promotion-level KPIs ([d_promos]()). These KPIs aren't likely to be incredibly useful in the real world but adding them was easy and it may prove useful for monitoring. 
-  - An intermediate model of daily promo performance KPIs ([int_marketing__promo_daily_performance]()), which I am imagining would form one component of a cost-benefit analysis of promotions. This model provides the benefit part and I imagine another intermediate model summarising the promo-level costs, and then a model that outputs daily cost-benefit performance KPIs for promos.
+  - A dimension model of promotions that includes some promotion-level KPIs ([d_promos](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/marketing/d_promos.sql)). These KPIs aren't likely to be incredibly useful in the real world but adding them was easy and it may prove useful for monitoring. 
+  - An intermediate model of daily promo performance KPIs ([int_marketing__promo_daily_performance](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/marketing/intermediate/int_marketing__promo_daily_performance.sql)), which I am imagining would form one component of a cost-benefit analysis of promotions. This model provides the benefit part and I imagine another intermediate model summarising the promo-level costs, and then a model that outputs daily cost-benefit performance KPIs for promos.
 * **Product:** This mart contains
-  - A fact model of page views (mentioned in the project materials but not used for anything further at this stage) ([f_page_views]())
-  - A fact model of daily product performance which combines day-grain data from ([f_product_daily_performance]())
-    - An intermediate model of daily-grain order performance ([int_product__daily_order_performance]()). This is separate because I imagine it will be re-used.
-    - An intermediate model of daily-grain site performance ([int_product__daily_site_performance]()). This is separate because I imagine it will be re-used.
-  - A fact model summarising some order KPIs at the user grain ([f_user_orders]())
+  - A fact model of page views (mentioned in the project materials but not used for anything further at this stage) ([f_page_views](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/product/f_page_views.sql))
+  - A fact model of daily product performance which combines day-grain data from ([f_product_daily_performance](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/product/f_product_daily_performance.sql))
+    - An intermediate model of daily-grain order performance ([int_product__daily_order_performance](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/product/intermediate/int_product__daily_order_performance.sql)). This is separate because I imagine it will be re-used.
+    - An intermediate model of daily-grain site performance ([int_product__daily_site_performance](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/product/intermediate/int_product__daily_site_performance.sql)). This is separate because I imagine it will be re-used.
+  - A fact model summarising some order KPIs at the user grain ([f_user_orders](https://github.com/mw-stanley/course-dbt/blob/main/greenery/models/marts/product/f_user_orders.sql))
 
 ## Paste in an image of your DAG from the docs.
 
