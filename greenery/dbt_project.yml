@@ -38,3 +38,7 @@ models:
       +materialized: view
     marts:
       +materialized: table
+#      +grants:
+#        select: ['reporting']
+      +post-hook:
+        - "{{ grant(role = 'reporting') }}"

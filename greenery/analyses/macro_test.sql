@@ -1,0 +1,1 @@
+select {{ sum_all_event_types(table_name='stg_postgres__events', column_name='event_type') }}

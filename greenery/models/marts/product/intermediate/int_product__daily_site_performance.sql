@@ -5,8 +5,7 @@ with events as (
 select
     e.product_uuid
     , e.created_at::date as dt
-    , sum(case when e.event_type = 'page_view' then 1 else 0 end) as product_page_views
-    , sum(case when e.event_type = 'add_to_cart' then 1 else 0 end) as product_add_to_carts   
+    {{ sum_all_event_types(table_name='stg_postgres__events', column_name='event_type') }}
 from events e
 where product_uuid is not null
 group by 1,2
