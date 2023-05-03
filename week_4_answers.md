@@ -85,7 +85,7 @@ WK	N_SESSIONS	N_PAGE_VIEW_SESSIONS	N_ADD_TO_CART_SESSIONS	ADD_TO_CART_DROPOFF	N_
 
 This shows that we have a 19.2% dropoff to add_to_cart and a 22.7% dropoff to checkout.
 
-Looking at this on a per-product basis using f_weekly_product_sales_funnel, we can see the top and bottom few products by funnel dropoff. It's worth noting that in the real world, this weekly product-grain and total-grain aggregation might be better handled in a semantic layer.
+Looking at this on a per-product basis using f_weekly_product_sales_funnel, we can see the top and bottom few products by funnel dropoff. It's worth noting that in the real world, this weekly product-grain and total-grain aggregation might be better handled in a semantic layer. This view will work well as the basis for more dashboards and exploration.
 
 ## Highest Add to Cart Dropoff
 
