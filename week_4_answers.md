@@ -76,7 +76,7 @@ So Pothos and String of Pearls both went out of stock in week 3 but were back in
 
 # Part 2 - funnel
 
-I added a line to my sum_all_event_types macro that also returns the count of distinct sessions, then added the session counts to a new model, f_product_weekly_funnel. I left this at the weekly grain so success can be tracked over time - daily seems too granular for this data as there are some inconsistencies with how sessions appear when using days.
+I added a line to my sum_all_event_types macro that also returns the count of distinct sessions, then added the session counts to a new model, f_weekly_sales_funnel. I left this at the weekly grain so success can be tracked over time - daily seems too granular for this data as there are some inconsistencies with how sessions appear when using days. This needs to be a separate model to the one that includes product grain because sessions are duplicated across products and will be double-counted.
 
 ```
 WK	N_SESSIONS	N_PAGE_VIEW_SESSIONS	N_ADD_TO_CART_SESSIONS	ADD_TO_CART_DROPOFF	N_CHECKOUT_SESSIONS	CHECKOUT_DROPOFF
@@ -85,6 +85,85 @@ WK	N_SESSIONS	N_PAGE_VIEW_SESSIONS	N_ADD_TO_CART_SESSIONS	ADD_TO_CART_DROPOFF	N_
 
 This shows that we have a 19.2% dropoff to add_to_cart and a 22.7% dropoff to checkout.
 
+Looking at this on a per-product basis using f_weekly_product_sales_funnel, we can see the top and bottom few products by funnel dropoff. It's worth noting that in the real world, this weekly product-grain and total-grain aggregation might be better handled in a semantic layer.
+
+## Highest Add to Cart Dropoff
+
+```
+select 
+    wk
+    , product_name
+    , add_to_cart_dropoff
+from f_weekly_product_sales_funnel
+order by add_to_cart_dropoff desc
+limit 3
+```
+
+```
+WK	PRODUCT_NAME	ADD_TO_CART_DROPOFF
+2021-02-08	Pothos	0.606557377
+2021-02-08	Ponytail Palm	0.5714285714
+2021-02-08	Money Tree	0.5357142857
+```
+
+## Lowest add to cart dropoff
+
+```
+select 
+    wk
+    , product_name
+    , add_to_cart_dropoff
+from f_weekly_product_sales_funnel
+order by add_to_cart_dropoff asc
+limit 3
+```
+
+```
+WK	PRODUCT_NAME	ADD_TO_CART_DROPOFF
+2021-02-08	String of pearls	0.3125
+2021-02-08	Bamboo	0.3731343284
+2021-02-08	Arrow Head	0.380952381
+```
+
+## Highest checkout dropoff
+
+```
+select 
+    wk
+    , product_name
+    , checkout_dropoff
+from f_weekly_product_sales_funnel
+order by checkout_dropoff desc
+limit 3
+```
+
+```
+WK	PRODUCT_NAME	CHECKOUT_DROPOFF
+2021-02-08	Angel Wings Begonia	0.25
+2021-02-08	Boston Fern	0.2352941176
+2021-02-08	Peace Lily	0.2285714286
+```
+
+## Lowest checkout dropoff
+
+```
+select 
+    wk
+    , product_name
+    , checkout_dropoff
+from f_weekly_product_sales_funnel
+order by checkout_dropoff asc
+limit 3
+```
+
+```
+WK	PRODUCT_NAME	CHECKOUT_DROPOFF
+2021-02-08	Money Tree	0
+2021-02-08	ZZ Plant	0.02857142857
+2021-02-08	Monstera	0.03846153846
+```
+
+## Exposure
 The exposure is in _product__exposures.yml
 
 # Part 3B - production

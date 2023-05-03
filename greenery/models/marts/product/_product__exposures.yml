@@ -13,6 +13,7 @@ exposures:
       name: Mike Stanley
       email: mike@greenery.com
     depends_on:
-      - ref('f_product_weekly_funnel')
+      - ref('f_weekly_sales_funnel')
+      - ref('f_product_daily_performance')
     
 

@@ -21,6 +21,11 @@ select
     , coalesce(odp.revenue_usd, 0) as revenue_usd
     , product_page_views / n_orders as page_views_per_order
     , product_add_to_carts - n_orders as abandoned_carts
+    , coalesce(pdp.n_page_view_sessions,0) as product_page_view_sessions
+    , coalesce(pdp.n_add_to_cart_sessions,0) as product_add_to_cart_sessions
+    , coalesce(pdp.n_checkout_sessions,0) as product_checkout_sessions
+    , 1-div0(product_add_to_cart_sessions::float, product_page_view_sessions) as add_to_cart_dropoff
+    , 1-div0(product_checkout_sessions::float, product_add_to_cart_sessions) as checkout_dropoff
 from order_daily_performance odp
     full join product_daily_performance pdp
         on odp.product_uuid = pdp.product_uuid
