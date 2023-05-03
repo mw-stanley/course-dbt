@@ -38,3 +38,7 @@ models:
   - name: f_product_daily_performance
     description: >
       Daily KPIs for Greenery products
+
+  - name: f_product_weekly_funnel
+    description: >
+      Weekly-grain KPIs for the product funnel as a whole

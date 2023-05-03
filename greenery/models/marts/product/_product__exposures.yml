@@ -1,0 +1,18 @@
+version: 2
+
+exposures:
+
+  - name: funnel_dashboard
+    label: Product Funnel Dashboard
+    type: dashboard
+    description: >
+      The product funnel dashboard, which the product team uses to understand their performance.
+    url: https://link/to/dashboard
+    maturity: high
+    owner: 
+      name: Mike Stanley
+      email: mike@greenery.com
+    depends_on:
+      - ref('f_product_weekly_funnel')
+    
+

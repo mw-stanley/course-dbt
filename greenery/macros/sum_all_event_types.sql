@@ -9,6 +9,7 @@
 
   {%- for event_type in event_types %}
   , sum(case when event_type = '{{ event_type }}' then 1 else 0 end) as n_{{ event_type }}s
+  , count(distinct case when event_type = '{{ event_type }}' then session_uuid else null end) as n_{{ event_type }}_sessions
   {%- endfor %}
 
 {%- endmacro %}
